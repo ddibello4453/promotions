@@ -18,7 +18,7 @@
 Pet Store Service
 
 This service implements a REST API that allows you to Create, Read, Update
-and Delete Pets from the inventory of pets in the PetShop
+and Delete Promotions from the inventory of promotions
 """
 
 from flask import jsonify, request, url_for, abort
@@ -43,4 +43,64 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
-# Todo: Place your REST API code here ...
+
+######################################################################
+# CREATE A NEW PET
+######################################################################
+@app.route("/promotions", methods=["POST"])
+def create_promotions():
+    """
+    Creates a Promotion
+
+    This endpoint will create a Promotion based the data in the body that is posted
+    """
+    app.logger.info("Request to create a promotion")
+    check_content_type("application/json")
+
+    promotions = Promotions()
+    promotions.deserialize(request.get_json())
+    promotions.create()
+    message = promotions.serialize()
+    # Todo: uncomment this code when get_promotions is implemented
+    # location_url = url_for("get_promotions", promotions_id=promotions.promo_id, _external=True)
+    location_url = "unknown"
+
+    app.logger.info("Promotions with ID: %d created.", promotions.promo_id)
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
+    ######################################################################
+
+
+#  U T I L I T Y   F U N C T I O N S
+######################################################################
+
+
+######################################################################
+# Checks the ContentType of a request
+######################################################################
+def check_content_type(content_type):
+    """Checks that the media type is correct"""
+    if "Content-Type" not in request.headers:
+        app.logger.error("No Content-Type specified.")
+        error(
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            f"Content-Type must be {content_type}",
+        )
+
+    if request.headers["Content-Type"] == content_type:
+        return
+
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
+    error(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        f"Content-Type must be {content_type}",
+    )
+
+
+######################################################################
+# Logs error messages before aborting
+######################################################################
+def error(status_code, reason):
+    """Logs the error and then aborts"""
+    app.logger.error(reason)
+    abort(status_code, reason)

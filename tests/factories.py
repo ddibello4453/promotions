@@ -2,8 +2,11 @@
 Test Factory to make fake objects for testing
 """
 
+from datetime import date
+
 import factory
-from service.models import Promotions
+from factory.fuzzy import FuzzyChoice, FuzzyInteger, FuzzyDate
+from service.models import Promotions, Type
 
 
 class PromotionsFactory(factory.Factory):
@@ -14,7 +17,13 @@ class PromotionsFactory(factory.Factory):
 
         model = Promotions
 
-    id = factory.Sequence(lambda n: n)
-    name = factory.Faker("first_name")
-
-    # Todo: Add your other attributes here...
+    promo_id = factory.Sequence(lambda n: n)
+    cust_promo_code = factory.Faker("word")
+    type = FuzzyChoice(choices=[Type.PERCENT, Type.SAVING, Type.BOGO])
+    value = FuzzyInteger(0, 100)
+    quantity = FuzzyInteger(0, 1000)
+    start_date = FuzzyDate(date.today())
+    end_date = FuzzyDate(date.today())
+    active = FuzzyChoice(choices=[True, False])
+    product_id = factory.Faker("random_number")
+    dev_created_at = date.today()
