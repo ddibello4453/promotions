@@ -10,21 +10,21 @@ Promotions - Promotions used in the e-commerce
 Attributes:
 -----------
 
-promo_id (integer) - the unique id of the promotion
+promo_id (integer) - the unique promo_id of the promotion
 cust_promo_code	(string) - the user-facing code user can use to implement the promotion
 type (string) - the type of the promotion (percent, saving, bogo)
 value (integer) - the value of the promotion (only applies for percent and saving)
 quantity (integer) - the number of times the promotion can be used
-start_date (timestamp) - the date the promotion starts
-end_date (timestamp) - the date the promotion ends
+start_date (date) - the date the promotion starts
+end_date (date) - the date the promotion ends
 active (boolean) - True for promotions that are active to be used
-product_id (string) - the unique id of the product the promotion is associated with
-dev_created_at (timestamp) - the date the promotion is created in the system
+product_id (string) - the unique promo_id of the product the promotion is associated with
+dev_created_at (date) - the date the promotion is created in the system
 """
 
 import logging
 from enum import Enum
-from datetime import datetime
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -58,21 +58,21 @@ class Promotions(db.Model):
     type = db.Column(db.Enum(Type), nullable=False)
     value = db.Column(db.Integer, nullable=True)
     quantity = db.Column(db.Integer, nullable=False)
-    start_date = db.Column(db.DateTime, nullable=True)
-    end_date = db.Column(db.DateTime, nullable=True)
+    start_date = db.Column(db.Date(), nullable=True)
+    end_date = db.Column(db.Date(), nullable=True)
     active = db.Column(db.Boolean(), nullable=False)
     product_id = db.Column(db.Integer, nullable=True)
-    dev_created_at = db.Column(db.DateTime, nullable=False, default=datetime.today())
+    dev_created_at = db.Column(db.Date(), nullable=False, default=date.today())
 
     def __repr__(self):
-        return f"<Promotions {self.name} id=[{self.id}]>"
+        return f"<Promotions {self.cust_promo_code} promo_id=[{self.promo_id}]>"
 
     def create(self):
         """
         Creates a Promotions to the database
         """
-        logger.info("Creating %s", self.name)
-        self.id = None  # pylint: disable=invalid-name
+        logger.info("Creating %s", self.cust_promo_code)
+        self.promo_id = None  # pylint: disable=invalid-cust_promo_code
         try:
             db.session.add(self)
             db.session.commit()
@@ -85,7 +85,7 @@ class Promotions(db.Model):
         """
         Updates a Promotions to the database
         """
-        logger.info("Saving %s", self.name)
+        logger.info("Saving %s", self.cust_promo_code)
         try:
             db.session.commit()
         except Exception as e:
@@ -95,7 +95,7 @@ class Promotions(db.Model):
 
     def delete(self):
         """Removes a Promotions from the data store"""
-        logger.info("Deleting %s", self.name)
+        logger.info("Deleting %s", self.cust_promo_code)
         try:
             db.session.delete(self)
             db.session.commit()
@@ -109,14 +109,14 @@ class Promotions(db.Model):
         return {
             "promo_id": self.promo_id,
             "cust_promo_code": self.cust_promo_code,
-            "type": self.type,
+            "type": self.type.name,
             "value": self.value,
             "quantity": self.quantity,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat(),
             "active": self.active,
             "product_id": self.product_id,
-            "dev_created_at": self.dev_created_at,
+            "dev_created_at": self.dev_created_at.isoformat(),
         }
 
     def deserialize(self, data):
@@ -128,14 +128,14 @@ class Promotions(db.Model):
         """
         try:
             self.cust_promo_code = data["cust_promo_code"]
-            self.type = data["type"]
+            self.type = getattr(Type, data["type"])
             self.value = data["value"]
             self.quantity = data["quantity"]
-            self.start_date = data["start_date"]
-            self.end_date = data["end_date"]
+            self.start_date = date.fromisoformat(data["start_date"])
+            self.end_date = date.fromisoformat(data["end_date"])
             self.active = data["active"]
             self.product_id = data["product_id"]
-            self.dev_created_at = data["dev_created_at"]
+            self.dev_created_at = date.fromisoformat(data["dev_created_at"])
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
@@ -162,15 +162,15 @@ class Promotions(db.Model):
     @classmethod
     def find(cls, by_id):
         """Finds a Promotions by it's ID"""
-        logger.info("Processing lookup for id %s ...", by_id)
+        logger.info("Processing lookup for promo_id %s ...", by_id)
         return cls.query.session.get(cls, by_id)
 
     @classmethod
-    def find_by_name(cls, name):
-        """Returns all Promotions with the given name
+    def find_by_cust_promo_id(cls, cust_promo_code):
+        """Returns all Promotions with the given cust_promo_code
 
         Args:
-            name (string): the name of the Promotions you want to match
+            cust_promo_code (string): the cust_promo_code of the Promotions you want to match
         """
-        logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)
+        logger.info("Processing cust_promo_code query for %s ...", cust_promo_code)
+        return cls.query.filter(cls.cust_promo_code == cust_promo_code)

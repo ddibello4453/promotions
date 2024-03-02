@@ -6,7 +6,7 @@ import os
 import logging
 from unittest import TestCase
 from wsgi import app
-from service.models import Promotions, DataValidationError, db
+from service.models import Promotions, Type, DataValidationError, db
 from .factories import PromotionsFactory
 
 DATABASE_URI = os.getenv(
@@ -48,15 +48,22 @@ class TestPromotions(TestCase):
     #  T E S T   C A S E S
     ######################################################################
 
-    def test_example_replace_this(self):
+    def test_create_promotions(self):
         """It should create a Promotions"""
-        # Todo: Remove this test case example
-        resource = PromotionsFactory()
-        resource.create()
-        self.assertIsNotNone(resource.id)
+        promotions = PromotionsFactory()
+        promotions.create()
+        self.assertIsNotNone(promotions.promo_id)
         found = Promotions.all()
         self.assertEqual(len(found), 1)
-        data = Promotions.find(resource.id)
-        self.assertEqual(data.name, resource.name)
+        data = Promotions.find(promotions.promo_id)
+        self.assertEqual(data.cust_promo_code, promotions.cust_promo_code)
+        self.assertEqual(data.type, promotions.type)
+        self.assertEqual(data.value, promotions.value)
+        self.assertEqual(data.quantity, promotions.quantity)
+        self.assertEqual(data.start_date, promotions.start_date)
+        self.assertEqual(data.end_date, promotions.end_date)
+        self.assertEqual(data.active, promotions.active)
+        self.assertEqual(data.product_id, promotions.product_id)
+        self.assertEqual(data.dev_created_at, promotions.dev_created_at)
 
     # Todo: Add your test cases here...
