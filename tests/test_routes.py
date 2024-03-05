@@ -88,6 +88,14 @@ class TestYourResourceService(TestCase):
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
 
+        def test_get_promotion_list(self):
+            """It should Get a list of Promotions"""
+            self._create_promotions(5)
+            response = self.client.get(BASE_URL)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = response.get_json()
+            self.assertEqual(len(data), 5)
+
         # Todo: uncomment this code when get_promotions is implemented
         # Check that the location header was correct
         # response = self.client.get(location)
