@@ -88,25 +88,42 @@ class TestYourResourceService(TestCase):
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
 
-        # Todo: uncomment this code when get_promotions is implemented
-        # Check that the location header was correct
-        # response = self.client.get(location)
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # new_promotions = response.get_json()
-        # self.assertEqual(
-        #     new_promotions["cust_promo_code"], test_promotions.cust_promo_code
-        # )
-        # self.assertEqual(new_promotions["type"], test_promotions.type.name)
-        # self.assertEqual(new_promotions["value"], test_promotions.value)
-        # self.assertEqual(new_promotions["quantity"], test_promotions.quantity)
-        # self.assertEqual(
-        #     new_promotions["start_date"], test_promotions.start_date.isoformat()
-        # )
-        # self.assertEqual(
-        #     new_promotions["end_date"], test_promotions.end_date.isoformat()
-        # )
-        # self.assertEqual(new_promotions["active"], test_promotions.active)
-        # self.assertEqual(new_promotions["product_id"], test_promotions.product_id)
-        # self.assertEqual(
-        #     new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
-        # )
+
+def test_update_promotion(self):
+    """It should Update an existing Promotion"""
+    # create a promotion to update
+    test_promotion = PromotionFactory()
+    response = self.client.post(BASE_URL, json=test_promotion.serialize())
+    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    # update the promotion
+    new_promotion = response.get_json()
+    logging.debug(new_promotion)
+    new_promotion["category"] = "unknown"
+    response = self.client.put(f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    updated_promotion = response.get_json()
+    self.assertEqual(updated_promotion["category"], "unknown")
+
+    # Todo: uncomment this code when get_promotions is implemented
+    # Check that the location header was correct
+    # response = self.client.get(location)
+    # self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # new_promotions = response.get_json()
+    # self.assertEqual(
+    #     new_promotions["cust_promo_code"], test_promotions.cust_promo_code
+    # )
+    # self.assertEqual(new_promotions["type"], test_promotions.type.name)
+    # self.assertEqual(new_promotions["value"], test_promotions.value)
+    # self.assertEqual(new_promotions["quantity"], test_promotions.quantity)
+    # self.assertEqual(
+    #     new_promotions["start_date"], test_promotions.start_date.isoformat()
+    # )
+    # self.assertEqual(
+    #     new_promotions["end_date"], test_promotions.end_date.isoformat()
+    # )
+    # self.assertEqual(new_promotions["active"], test_promotions.active)
+    # self.assertEqual(new_promotions["product_id"], test_promotions.product_id)
+    # self.assertEqual(
+    #     new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
+    # )
