@@ -15,7 +15,7 @@
 ######################################################################
 
 """
-Pet Store Service
+Product Promotion Service
 
 This service implements a REST API that allows you to Create, Read, Update
 and Delete Promotions from the inventory of promotions
@@ -45,7 +45,7 @@ def index():
 
 
 ######################################################################
-# CREATE A NEW PET
+# CREATE A NEW PROMOTION
 ######################################################################
 @app.route("/promotions", methods=["POST"])
 def create_promotions():
@@ -68,7 +68,50 @@ def create_promotions():
     app.logger.info("Promotions with ID: %d created.", promotions.promo_id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
-    ######################################################################
+
+######################################################################
+# LIST ALL PROMOTIONS
+######################################################################
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """Returns all of the Promotions"""
+    app.logger.info("Request for promotion list")
+
+    promotions = []
+
+    # See if any query filters were passed in
+    category = request.args.get("category")
+    name = request.args.get("name")
+    if category:
+        promotions = Promotions.find_by_category(category)
+    elif name:
+        promotions = Promotions.find_by_name(name)
+    else:
+        promotions = Promotions.all()
+
+    results = [promotion.serialize() for promotion in promotions]
+    app.logger.info("Returning %d promotions", len(results))
+    return jsonify(results), status.HTTP_200_OK
+
+
+######################################################################
+# READ A PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>", methods=["GET"])
+def get_product(promotion_id):
+    """
+    Retrieve a single Promotion
+
+    This endpoint will return a Promotion based on it's id
+    """
+    app.logger.info("Request for pet with id: %s", promotion_id)
+
+    promotion = Promotions.find(promotion_id)
+    if not promotion:
+        error(status.HTTP_404_NOT_FOUND, f"Pet with id '{promotion_id}' was not found.")
+
+    app.logger.info("Returning promotion: %s", promotion.promo_id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 
 #  U T I L I T Y   F U N C T I O N S
