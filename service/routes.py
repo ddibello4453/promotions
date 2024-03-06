@@ -113,25 +113,6 @@ def get_product(promotion_id):
     app.logger.info("Returning promotion: %s", promotion.promo_id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
-######################################################################
-# DELETE A Promotion
-######################################################################
-@app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
-def delete_promotion(promotion_id):
-    """
-    Delete a Promotion
-
-    This endpoint will delete a Promo based the id specified in the path
-    """
-    app.logger.info("Request to delete promo with id: %d", promotion_id)
-
-    promotion = Promotions.find(promotion_id)
-    if promotion:
-        promotion.delete()
-
-    app.logger.info("Promotion with ID: %d delete complete.", promotion_id)
-    return "", status.HTTP_204_NO_CONTENT
-
 
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################

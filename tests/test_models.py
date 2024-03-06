@@ -66,13 +66,4 @@ class TestPromotions(TestCase):
         self.assertEqual(data.product_id, promotions.product_id)
         self.assertEqual(data.dev_created_at, promotions.dev_created_at)
 
-    def test_delete_a_promotion(self):
-        """It should Delete a Pet"""
-        promotions = PromotionsFactory()
-        promotions.create()
-        self.assertEqual(len(Promotions.all()), 1)
-        # delete the promotion and make sure it isn't in the database
-        promotions.delete()
-        self.assertEqual(len(Promotions.all()), 0)
-
     # Todo: Add your test cases here...

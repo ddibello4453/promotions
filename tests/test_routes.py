@@ -154,13 +154,3 @@ class TestYourResourceService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
-
-    def test_delete_promotion(self):
-        """It should Delete a Promotion"""
-        test_promotion = self._create_promotions(1)[0]
-        response = self.client.delete(f"{BASE_URL}/{test_promotion.promo_id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(len(response.data), 0)
-        # make sure they are deleted
-        response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
