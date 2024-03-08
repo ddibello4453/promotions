@@ -104,14 +104,18 @@ def get_product(promotion_id):
 
     This endpoint will return a Promotion based on it's id
     """
-    app.logger.info("Request for pet with id: %s", promotion_id)
+    app.logger.info("Request for promotion with id: %s", promotion_id)
 
     promotion = Promotions.find(promotion_id)
     if not promotion:
-        error(status.HTTP_404_NOT_FOUND, f"Pet with id '{promotion_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     app.logger.info("Returning promotion: %s", promotion.promo_id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # DELETE A Promotion
@@ -135,6 +139,33 @@ def delete_promotion(promotion_id):
 
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
+# Update a promotion
+################################################
+
+
+@app.route("/promotions/<int:promotion_id>", methods=["PUT"])
+def update_promotions(promotion_id):
+    """
+    Update a Promotion
+
+    This endpoint will update a Promotion based the body that is posted
+    """
+    app.logger.info("Request to update promotion with id: %d", promotion_id)
+    check_content_type("application/json")
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id: '{promotion_id}' was not found.",
+        )
+
+    promotion.deserialize(request.get_json())
+    promotion.id = promotion_id
+    promotion.update()
+
+    app.logger.info("Promotion with ID: %d updated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 
 ######################################################################
