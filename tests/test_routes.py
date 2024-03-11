@@ -103,7 +103,23 @@ class TestYourResourceService(TestCase):
         self.assertEqual(
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
+#####
+        # Test List Promotion
+def test_update_promotion(self):
+        """It should Update an existing Promotion"""
+        # create a promotion to update
+        test_promotion = PromotionFactory()
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        # update the promotion
+        new_promotion = response.get_json()
+        logging.debug(new_promotion)
+        new_promotion["category"] = "unknown"
+        response = self.client.put(f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_promotion = response.get_json()
+        self.assertEqual(updated_promotion["category"], "unknown")
         # Todo: uncomment this code when get_promotions is implemented
         # Check that the location header was correct
         # response = self.client.get(location)
@@ -154,3 +170,13 @@ class TestYourResourceService(TestCase):
         data = response.get_json()
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
+
+    def test_delete_promotion(self):
+        """It should Delete a Promotion"""
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_promotion.promo_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
