@@ -103,23 +103,27 @@ class TestYourResourceService(TestCase):
         self.assertEqual(
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
-#####
-        # Test List Promotion
-def test_update_promotion(self):
+
+    #####
+    # Test List Promotion
+    def test_update_promotion(self):
         """It should Update an existing Promotion"""
         # create a promotion to update
-        test_promotion = PromotionFactory()
-        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        test_promotions = PromotionsFactory()
+        response = self.client.post(BASE_URL, json=test_promotions.serialize())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # update the promotion
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["category"] = "unknown"
-        response = self.client.put(f"{BASE_URL}/{new_promotion['id']}", json=new_promotion)
+        response = self.client.put(
+            f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
-        self.assertEqual(updated_promotion["category"], "unknown")
+        self.assertEqual(updated_promotion["type"], test_promotions.type.name)
+
         # Todo: uncomment this code when get_promotions is implemented
         # Check that the location header was correct
         # response = self.client.get(location)

@@ -153,7 +153,7 @@ def update_promotions(promotion_id):
     app.logger.info("Request to update promotion with id: %d", promotion_id)
     check_content_type("application/json")
 
-    promotion = Promotion.find(promotion_id)
+    promotion = Promotions.find(promotion_id)
     if not promotion:
         error(
             status.HTTP_404_NOT_FOUND,
