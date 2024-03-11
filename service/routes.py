@@ -108,7 +108,10 @@ def get_product(promotion_id):
 
     promotion = Promotions.find(promotion_id)
     if not promotion:
-        error(status.HTTP_404_NOT_FOUND, f"Pet with id '{promotion_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     app.logger.info("Returning promotion: %s", promotion.promo_id)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
