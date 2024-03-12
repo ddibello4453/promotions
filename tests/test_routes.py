@@ -104,6 +104,28 @@ class TestYourResourceService(TestCase):
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
 
+        # Check that the location header was correct
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_pet = response.get_json()
+        self.assertEqual(
+            new_promotions["cust_promo_code"], test_promotions.cust_promo_code
+        )
+        self.assertEqual(new_promotions["type"], test_promotions.type.name)
+        self.assertEqual(new_promotions["value"], test_promotions.value)
+        self.assertEqual(new_promotions["quantity"], test_promotions.quantity)
+        self.assertEqual(
+            new_promotions["start_date"], test_promotions.start_date.isoformat()
+        )
+        self.assertEqual(
+            new_promotions["end_date"], test_promotions.end_date.isoformat()
+        )
+        self.assertEqual(new_promotions["active"], test_promotions.active)
+        self.assertEqual(new_promotions["product_id"], test_promotions.product_id)
+        self.assertEqual(
+            new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
+        )
+
     #####
     # Test List Promotion
     def test_update_promotion(self):
@@ -123,29 +145,6 @@ class TestYourResourceService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
         self.assertEqual(updated_promotion["type"], test_promotions.type.name)
-
-        # Todo: uncomment this code when get_promotions is implemented
-        # Check that the location header was correct
-        # response = self.client.get(location)
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # new_promotions = response.get_json()
-        # self.assertEqual(
-        #     new_promotions["cust_promo_code"], test_promotions.cust_promo_code
-        # )
-        # self.assertEqual(new_promotions["type"], test_promotions.type.name)
-        # self.assertEqual(new_promotions["value"], test_promotions.value)
-        # self.assertEqual(new_promotions["quantity"], test_promotions.quantity)
-        # self.assertEqual(
-        #     new_promotions["start_date"], test_promotions.start_date.isoformat()
-        # )
-        # self.assertEqual(
-        #     new_promotions["end_date"], test_promotions.end_date.isoformat()
-        # )
-        # self.assertEqual(new_promotions["active"], test_promotions.active)
-        # self.assertEqual(new_promotions["product_id"], test_promotions.product_id)
-        # self.assertEqual(
-        #     new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
-        # )
 
     def test_get_promotion_list(self):
         """It should Get a list of Promotions"""
@@ -184,3 +183,53 @@ class TestYourResourceService(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+######################################################################
+#  T E S T   S A D   P A T H S
+######################################################################
+class TestSadPaths(TestCase):
+    """Test REST Exception Handling"""
+
+    def setUp(self):
+        """Runs before each test"""
+        self.client = app.test_client()
+
+    def test_method_not_allowed(self):
+        """It should not allow update without a promotions id"""
+        response = self.client.put(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_create_promotion_no_data(self):
+        """It should not Create a Promotion with missing data"""
+        response = self.client.post(BASE_URL, json={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_promotion_no_content_type(self):
+        """It should not Create a Promotion with no content type"""
+        response = self.client.post(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_create_promotion_wrong_content_type(self):
+        """It should not Create a Promotion with the wrong content type"""
+        response = self.client.post(BASE_URL, data="hello", content_type="text/html")
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_create_promotion_bad_active(self):
+        """It should not Create a Promotion with bad available data"""
+        test_promotion = PromotionsFactory()
+        logging.debug(test_promotion)
+        # change available to a string
+        test_promotion.active = "true"
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_pet_bad_type(self):
+        """It should not Create a Promotion with bad type data"""
+        promotions = PromotionsFactory()
+        logging.debug(promotions)
+        # change gender to a bad string
+        test_promotion = promotions.serialize()
+        test_promotion["type"] = "percent"  # wrong case
+        response = self.client.post(BASE_URL, json=test_promotion)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
