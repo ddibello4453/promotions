@@ -64,6 +64,10 @@ class Promotions(db.Model):
     product_id = db.Column(db.Integer, nullable=True)
     dev_created_at = db.Column(db.Date(), nullable=False, default=date.today())
 
+    ##################################################
+    # INSTANCE METHODS
+    ##################################################
+
     def __repr__(self):
         return f"<Promotions {self.cust_promo_code} promo_id=[{self.promo_id}]>"
 
@@ -92,6 +96,9 @@ class Promotions(db.Model):
             db.session.rollback()
             logger.error("Error updating record: %s", self)
             raise DataValidationError(e) from e
+        if self.promo_id is None:
+            raise DataValidationError("Update called on a Promotion with no ID")
+        db.session.commit()
 
     def delete(self):
         """Removes a Promotions from the data store"""
@@ -133,7 +140,12 @@ class Promotions(db.Model):
             self.quantity = data["quantity"]
             self.start_date = date.fromisoformat(data["start_date"])
             self.end_date = date.fromisoformat(data["end_date"])
-            self.active = data["active"]
+            if isinstance(data["active"], bool):
+                self.active = data["active"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for boolean [active]: " + str(type(data["active"]))
+                )
             self.product_id = data["product_id"]
             self.dev_created_at = date.fromisoformat(data["dev_created_at"])
         except AttributeError as error:
