@@ -20,7 +20,7 @@ Product Promotion Service
 This service implements a REST API that allows you to Create, Read, Update
 and Delete Promotions from the inventory of promotions
 """
-
+from datetime import date, timedelta
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
 from service.models import Promotions
@@ -173,6 +173,29 @@ def update_promotions(promo_id):
     promotion.update()
 
     app.logger.info("Promotion with ID: %d updated.", promotion.promo_id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+#  CANCEL A PROMOTION
+######################################################################
+
+
+@app.route("/promotions/cancel/<int:promo_id>", methods=["PUT"])
+def cancel_promotions(promo_id):
+    """
+    Cancel a Promotion
+    """
+    promotion = Promotions.find(promo_id)
+    if promotion is None:
+        # Promotion not found, return 404
+        abort(status.HTTP_404_NOT_FOUND, description="Promotion not found")
+
+    # Logic to cancel the promotion...
+    promotion.end_date = date.today() - timedelta(days=1)
+    promotion.active = False
+    promotion.update()
+
     return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 

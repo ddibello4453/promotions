@@ -4,6 +4,7 @@ TestPromotions API Service Test Suite
 
 import os
 import logging
+from datetime import date, timedelta
 from unittest import TestCase
 from wsgi import app
 from service.common import status
@@ -107,7 +108,7 @@ class TestYourResourceService(TestCase):
         # Check that the location header was correct
         response = self.client.get(location)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_pet = response.get_json()
+        new_promotions = response.get_json()
         self.assertEqual(
             new_promotions["cust_promo_code"], test_promotions.cust_promo_code
         )
@@ -183,6 +184,22 @@ class TestYourResourceService(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cancel(self):
+        """It should cancel a promotion by changing its end date to yesterday."""
+        # create a promotion to update
+        test_promotions = PromotionsFactory()
+        response = self.client.post(BASE_URL, json=test_promotions.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # cancel the promotion
+        new_promotion = response.get_json()
+        logging.debug(new_promotion)
+        new_promotion["end_date"] = (date.today() - timedelta(days=1)).isoformat()
+        new_promotion["active"] = False
+        response = self.client.put(
+            f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 ######################################################################

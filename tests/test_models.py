@@ -6,8 +6,8 @@ import os
 import logging
 from unittest import TestCase
 from unittest.mock import patch
+from datetime import date, timedelta
 from wsgi import app
-from datetime import date
 from service.models import Promotions, Type, DataValidationError, db
 from .factories import PromotionsFactory
 
@@ -244,6 +244,33 @@ class TestCaseBase(TestCase):
         data["type"] = "percent"  # wrong case
         promotions = Promotions()
         self.assertRaises(DataValidationError, promotions.deserialize, data)
+
+    def test_cancel(self):
+        """It should test whether a promotion has been cancelled successfully"""
+        promotions = PromotionsFactory()
+        logging.debug(promotions)
+        promotions.promo_id = None
+        promotions.create()
+        logging.debug(promotions)
+        self.assertIsNotNone(promotions.promo_id)
+        # Change it an save it
+        promotions.end_date = date.today() - timedelta(days=1)
+        promotions.active = False
+        original_id = promotions.promo_id
+        promotions.update()
+        self.assertEqual(promotions.promo_id, original_id)
+        self.assertEqual(promotions.end_date, date.today() - timedelta(days=1))
+        self.assertEqual(promotions.active, False)
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        promotions = Promotions.all()
+        self.assertEqual(len(promotions), 1)
+        self.assertEqual(promotions[0].promo_id, original_id)
+        self.assertEqual(
+            promotions[0].end_date,
+            date.today() - timedelta(days=1),
+        )
+        self.assertEqual(promotions[0].active, False)
 
 
 ######################################################################

@@ -24,7 +24,7 @@ dev_created_at (date) - the date the promotion is created in the system
 
 import logging
 from enum import Enum
-from datetime import date
+from datetime import date, timedelta
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -76,7 +76,7 @@ class Promotions(db.Model):
         Creates a Promotions to the database
         """
         logger.info("Creating %s", self.cust_promo_code)
-        self.promo_id = None  # pylint: disable=invalid-cust_promo_code
+        self.promo_id = None
         try:
             db.session.add(self)
             db.session.commit()
@@ -161,6 +161,14 @@ class Promotions(db.Model):
             ) from error
         return self
 
+    def cancel(self):
+        """
+        Cancels a promotion by setting its end date to today
+        """
+        self.end_date = date.today() - timedelta(days=1)
+        self.active = False
+        self.update()
+
     ##################################################
     # CLASS METHODS
     ##################################################
@@ -176,13 +184,3 @@ class Promotions(db.Model):
         """Finds a Promotions by it's ID"""
         logger.info("Processing lookup for promo_id %s ...", by_id)
         return cls.query.session.get(cls, by_id)
-
-    @classmethod
-    def find_by_cust_promo_id(cls, cust_promo_code):
-        """Returns all Promotions with the given cust_promo_code
-
-        Args:
-            cust_promo_code (string): the cust_promo_code of the Promotions you want to match
-        """
-        logger.info("Processing cust_promo_code query for %s ...", cust_promo_code)
-        return cls.query.filter(cls.cust_promo_code == cust_promo_code)
