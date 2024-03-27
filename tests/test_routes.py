@@ -185,22 +185,6 @@ class TestYourResourceService(TestCase):
         response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_cancel(self):
-        """It should cancel a promotion by changing its end date to yesterday."""
-        # create a promotion to update
-        test_promotions = PromotionsFactory()
-        response = self.client.post(BASE_URL, json=test_promotions.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # cancel the promotion
-        new_promotion = response.get_json()
-        logging.debug(new_promotion)
-        new_promotion["end_date"] = (date.today() - timedelta(days=1)).isoformat()
-        new_promotion["active"] = False
-        response = self.client.put(
-            f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
 ######################################################################
 #  T E S T   S A D   P A T H S

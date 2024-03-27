@@ -177,29 +177,6 @@ def update_promotions(promo_id):
 
 
 ######################################################################
-#  CANCEL A PROMOTION
-######################################################################
-
-
-@app.route("/promotions/cancel/<int:promo_id>", methods=["PUT"])
-def cancel_promotions(promo_id):
-    """
-    Cancel a Promotion
-    """
-    promotion = Promotions.find(promo_id)
-    if promotion is None:
-        # Promotion not found, return 404
-        abort(status.HTTP_404_NOT_FOUND, description="Promotion not found")
-
-    # Logic to cancel the promotion...
-    promotion.end_date = date.today() - timedelta(days=1)
-    promotion.active = False
-    promotion.update()
-
-    return jsonify(promotion.serialize()), status.HTTP_200_OK
-
-
-######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
