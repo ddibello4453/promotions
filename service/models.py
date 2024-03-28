@@ -161,6 +161,14 @@ class Promotions(db.Model):
             ) from error
         return self
 
+    def cancel(self):
+        """
+        Cancels a promotion by setting its end date to today
+        """
+        self.end_date = date.today() - timedelta(days=1)
+        self.active = False
+        self.update()
+
     ##################################################
     # CLASS METHODS
     ##################################################
