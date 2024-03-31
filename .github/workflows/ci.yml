@@ -36,7 +36,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     # Steps for the build
     steps:
       - name: Checkout
@@ -47,7 +46,6 @@ jobs:
           python -m pip install -U pip poetry
           poetry config virtualenvs.create false
           poetry install
-
       - name: Linting
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -56,7 +54,6 @@ jobs:
           flake8 service tests --count --max-complexity=10 --max-line-length=127 --statistics
           # Run pylint on the service
           pylint service tests --max-line-length=127
-
       - name: Run unit tests with green
         run: |
           export FLASK_APP=service:app
