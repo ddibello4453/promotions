@@ -24,7 +24,7 @@ dev_created_at (date) - the date the promotion is created in the system
 
 import logging
 from enum import Enum
-from datetime import date
+from datetime import date, timedelta
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -64,6 +64,10 @@ class Promotions(db.Model):
     product_id = db.Column(db.Integer, nullable=True)
     dev_created_at = db.Column(db.Date(), nullable=False, default=date.today())
 
+    ##################################################
+    # INSTANCE METHODS
+    ##################################################
+
     def __repr__(self):
         return f"<Promotions {self.cust_promo_code} promo_id=[{self.promo_id}]>"
 
@@ -72,7 +76,7 @@ class Promotions(db.Model):
         Creates a Promotions to the database
         """
         logger.info("Creating %s", self.cust_promo_code)
-        self.promo_id = None  # pylint: disable=invalid-cust_promo_code
+        self.promo_id = None
         try:
             db.session.add(self)
             db.session.commit()
@@ -92,6 +96,9 @@ class Promotions(db.Model):
             db.session.rollback()
             logger.error("Error updating record: %s", self)
             raise DataValidationError(e) from e
+        if self.promo_id is None:
+            raise DataValidationError("Update called on a Promotion with no ID")
+        db.session.commit()
 
     def delete(self):
         """Removes a Promotions from the data store"""
@@ -133,7 +140,12 @@ class Promotions(db.Model):
             self.quantity = data["quantity"]
             self.start_date = date.fromisoformat(data["start_date"])
             self.end_date = date.fromisoformat(data["end_date"])
-            self.active = data["active"]
+            if isinstance(data["active"], bool):
+                self.active = data["active"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for boolean [active]: " + str(type(data["active"]))
+                )
             self.product_id = data["product_id"]
             self.dev_created_at = date.fromisoformat(data["dev_created_at"])
         except AttributeError as error:
@@ -148,6 +160,14 @@ class Promotions(db.Model):
                 + str(error)
             ) from error
         return self
+
+    def cancel(self):
+        """
+        Cancels a promotion by setting its end date to today
+        """
+        self.end_date = date.today() - timedelta(days=1)
+        self.active = False
+        self.update()
 
     ##################################################
     # CLASS METHODS
@@ -164,13 +184,3 @@ class Promotions(db.Model):
         """Finds a Promotions by it's ID"""
         logger.info("Processing lookup for promo_id %s ...", by_id)
         return cls.query.session.get(cls, by_id)
-
-    @classmethod
-    def find_by_cust_promo_id(cls, cust_promo_code):
-        """Returns all Promotions with the given cust_promo_code
-
-        Args:
-            cust_promo_code (string): the cust_promo_code of the Promotions you want to match
-        """
-        logger.info("Processing cust_promo_code query for %s ...", cust_promo_code)
-        return cls.query.filter(cls.cust_promo_code == cust_promo_code)
