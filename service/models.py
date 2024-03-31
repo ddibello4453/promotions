@@ -50,6 +50,8 @@ class Promotions(db.Model):
     Class that represents a Promotions
     """
 
+    # pylint: disable=too-many-instance-attributes
+
     ##################################################
     # Table Schema
     ##################################################
