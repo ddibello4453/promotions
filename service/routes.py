@@ -23,7 +23,7 @@ and Delete Promotions from the inventory of promotions
 from datetime import date, timedelta
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
-from service.models import Promotions
+from service.models import Promotions, Type
 from service.common import status  # HTTP Status Codes
 
 
@@ -89,12 +89,10 @@ def list_promotions():
     promotions = []
 
     # See if any query filters were passed in
-    category = request.args.get("category")
-    name = request.args.get("name")
-    if category:
-        promotions = Promotions.find_by_category(category)
-    elif name:
-        promotions = Promotions.find_by_name(name)
+    promo_type = request.args.get("type")
+    if promo_type:
+        promo_type = getattr(Type, request.args.get("type"))
+        promotions = Promotions.find_by_type(promo_type)
     else:
         promotions = Promotions.all()
 

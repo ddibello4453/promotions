@@ -50,6 +50,8 @@ class Promotions(db.Model):
     Class that represents a Promotions
     """
 
+    # pylint: disable=too-many-instance-attributes
+
     ##################################################
     # Table Schema
     ##################################################
@@ -178,6 +180,16 @@ class Promotions(db.Model):
         """Returns all of the Promotions in the database"""
         logger.info("Processing all Promotions")
         return cls.query.all()
+
+    @classmethod
+    def find_by_type(cls, promo_type):
+        """Returns all promotions with the given promo_type
+
+        Args:
+            promo_type (string): the val of the promo_type you want to get
+        """
+        logger.info("Processing type query for %s ...", promo_type)
+        return cls.query.filter(cls.type == promo_type)
 
     @classmethod
     def find(cls, by_id):

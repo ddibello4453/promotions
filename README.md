@@ -1,22 +1,22 @@
 # Promotions Service
 
+[![Build Status](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions/workflows/ci.yml/badge.svg)](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 
-
 ```
-Endpoint                         Methods       Rule                          
+Endpoint                         Methods       Rule
 -------------------------------  ------------  ------------------------------
-create_promotions                POST          /promotions                   
+create_promotions                POST          /promotions
 delete_promotion                 DELETE        /promotions/<int:promotion_id>
 get_product                      GET           /promotions/<int:promotion_id>
-index                            GET           /                             
-list_promotions                  GET           /promotions                   
-static                           GET           /static/<path:filename>       
+index                            GET           /
+list_promotions                  GET           /promotions
+static                           GET           /static/<path:filename>
 update_promotions                PUT           /promotions/<int:promotion_id>
 ```
 
-Test Coverage 95.88% test coverage and can be run with ```make test```
+Test Coverage 95.88% test coverage and can be run with `make test`
 
 ## Contents
 

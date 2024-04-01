@@ -27,6 +27,7 @@ class TestYourResourceService(TestCase):
     @classmethod
     def setUpClass(cls):
         """Run once before all tests"""
+        # pylint: disable=R0801
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
         # Set up the test database
@@ -68,6 +69,11 @@ class TestYourResourceService(TestCase):
     ######################################################################
     #  P L A C E   T E S T   C A S E S   H E R E
     ######################################################################
+
+    def test_health(self):
+        """It should return status healthy"""
+        resp = self.client.get("/health")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_index(self):
         """It should call the home page"""
@@ -127,25 +133,27 @@ class TestYourResourceService(TestCase):
             new_promotions["dev_created_at"], test_promotions.dev_created_at.isoformat()
         )
 
-    #####
-    # Test List Promotion
     def test_update_promotion(self):
         """It should Update an existing Promotion"""
-        # create a promotion to update
-        test_promotions = PromotionsFactory()
-        response = self.client.post(BASE_URL, json=test_promotions.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # update the promotion
-        new_promotion = response.get_json()
+        self._create_promotions(1)
+        response = self.client.get(BASE_URL)
+        new_promotion = response.get_json()[0]
         logging.debug(new_promotion)
-        new_promotion["category"] = "unknown"
         response = self.client.put(
             f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
-        self.assertEqual(updated_promotion["type"], test_promotions.type.name)
+        self.assertEqual(updated_promotion, new_promotion)
+
+    def test_update_promotion_error(self):
+        """It should show 404 error"""
+        self._create_promotions(1)
+        response = self.client.get(BASE_URL)
+        new_promotion = response.get_json()[0]
+        logging.debug(new_promotion)
+        response = self.client.put(f"{BASE_URL}/{1}", json=new_promotion)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_promotion_list(self):
         """It should Get a list of Promotions"""
@@ -154,6 +162,12 @@ class TestYourResourceService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
+
+    def test_get_promotion_list_by_type(self):
+        """It should Get a list of Promotions"""
+        self._create_promotions(5)
+        response = self.client.get(BASE_URL + "?type=BOGO")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""
@@ -185,13 +199,10 @@ class TestYourResourceService(TestCase):
         response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_cancel(self):
+    def test_cancel_promotion(self):
         """It should cancel a promotion by changing its end date to yesterday."""
-        # create a promotion to update
-        test_promotions = PromotionsFactory()
-        response = self.client.post(BASE_URL, json=test_promotions.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # cancel the promotion
+        cancel_promotion = self._create_promotions(1)[0]
+        response = self.client.put(f"{BASE_URL}/cancel/{cancel_promotion.promo_id}")
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["end_date"] = (date.today() - timedelta(days=1)).isoformat()
@@ -199,7 +210,14 @@ class TestYourResourceService(TestCase):
         response = self.client.put(
             f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotion = response.get_json()
+        self.assertEqual(promotion, new_promotion)
+
+    def test_cancel_promotion_error(self):
+        """It should give 404 error on cancel promotion"""
+        _ = self._create_promotions(1)[0]
+        response = self.client.put(f"{BASE_URL}/cancel/{1}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 ######################################################################
