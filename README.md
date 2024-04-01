@@ -16,7 +16,7 @@ static                           GET           /static/<path:filename>
 update_promotions                PUT           /promotions/<int:promotion_id>
 ```
 
-Test Coverage 95.88% test coverage and can be run with `make test`
+Test Coverage 97% test coverage and can be run with `make test`
 
 ## Contents
 
