@@ -215,7 +215,7 @@ class TestYourResourceService(TestCase):
 
     def test_cancel_promotion_error(self):
         """It should give 404 error on cancel promotion"""
-        self._create_promotions(1)[0]
+        cancel_promotion = self._create_promotions(1)[0]
         response = self.client.put(f"{BASE_URL}/cancel/{1}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
