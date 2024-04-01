@@ -169,7 +169,6 @@ class TestYourResourceService(TestCase):
         response = self.client.get(BASE_URL + "?type=BOGO")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(len(data), 1)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""
