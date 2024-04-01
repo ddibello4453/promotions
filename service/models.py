@@ -182,14 +182,14 @@ class Promotions(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_type(cls, type):
-        """Returns all promotions with the given type
+    def find_by_type(cls, promo_type):
+        """Returns all promotions with the given promo_type
 
         Args:
-            type (string): the val of the type you want to get
+            promo_type (string): the val of the promo_type you want to get
         """
-        logger.info("Processing type query for %s ...", type)
-        return cls.query.filter(cls.type == type)
+        logger.info("Processing type query for %s ...", promo_type)
+        return cls.query.filter(cls.type == promo_type)
 
     @classmethod
     def find(cls, by_id):
