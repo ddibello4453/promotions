@@ -144,7 +144,7 @@ class TestYourResourceService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
-        self.assertEqual(updated_promotion["type"], new_promotion.type.name)
+        self.assertEqual(updated_promotion, new_promotion)
 
     def test_update_promotion_error(self):
         """It should show 404 error"""
