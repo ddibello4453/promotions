@@ -199,13 +199,10 @@ class TestYourResourceService(TestCase):
         response = self.client.get(f"{BASE_URL}/{test_promotion.promo_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_cancel(self):
+    def test_cancel_promotion(self):
         """It should cancel a promotion by changing its end date to yesterday."""
-        # create a promotion to update
-        test_promotions = PromotionsFactory()
-        response = self.client.post(BASE_URL, json=test_promotions.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # cancel the promotion
+        cancel_promotion = self._create_promotions(1)[0]
+        response = self.client.put(f"{BASE_URL}/cancel/{cancel_promotion.promo_id}")
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["end_date"] = (date.today() - timedelta(days=1)).isoformat()
@@ -213,7 +210,14 @@ class TestYourResourceService(TestCase):
         response = self.client.put(
             f"{BASE_URL}/{new_promotion['promo_id']}", json=new_promotion
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotion = response.get_json()
+        self.assertEqual(promotion, new_promotion)
+
+    def test_cancel_promotion_error(self):
+        """It should give 404 error on cancel promotion"""
+        self._create_promotions(1)[0]
+        response = self.client.put(f"{BASE_URL}/cancel/{1}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 ######################################################################
