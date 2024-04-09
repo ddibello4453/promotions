@@ -9,7 +9,7 @@
 Endpoint                         Methods       Rule
 -------------------------------  ------------  ------------------------------
 create_promotions                POST          /promotions
-delete_promotion                 DELETE        /promotions/<int:promotion_id>
+delete_promotions                 DELETE        /promotions/<int:promotion_id>
 get_product                      GET           /promotions/<int:promotion_id>
 index                            GET           /
 list_promotions                  GET           /promotions
