@@ -42,10 +42,7 @@ def health_check():
 @app.route("/")
 def index():
     """Root URL response"""
-    return (
-        "Reminder: return some useful information in json format about the service here",
-        status.HTTP_200_OK,
-    )
+    return app.send_static_file("index.html")
 
 
 ######################################################################

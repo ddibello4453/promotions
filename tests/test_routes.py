@@ -259,7 +259,7 @@ class TestSadPaths(TestCase):
         response = self.client.post(BASE_URL, json=test_promotion.serialize())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_pet_bad_type(self):
+    def test_create_promotion_bad_type(self):
         """It should not Create a Promotion with bad type data"""
         promotions = PromotionsFactory()
         logging.debug(promotions)
