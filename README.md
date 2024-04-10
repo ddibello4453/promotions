@@ -1,6 +1,7 @@
 # Promotions Service
 
 [![Build Status](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions/workflows/tdd-tests.yml/badge.svg)](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions)
+[![Build Status](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions/workflows/bdd-tests.yml/badge.svg)](https://github.com/CSCI-GA-2820-SP24-001/promotions/actions)
 [![codecov](https://codecov.io/gh/CSCI-GA-2820-SP24-001/promotions/graph/badge.svg?token=Z88A09R325)](https://codecov.io/gh/CSCI-GA-2820-SP24-001/promotions)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
