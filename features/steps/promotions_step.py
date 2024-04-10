@@ -46,11 +46,15 @@ def step_impl(context):
     # load the database with new promotions
     for row in context.table:
         payload = {
-            "name": row["name"],
-            "category": row["category"],
-            "available": row["available"] in ["True", "true", "1"],
-            "gender": row["gender"],
-            "birthday": row["birthday"],
+            "cust_promo_code": row["cust_promo_code"],
+            "type": row["type"],
+            "value": row["value"],
+            "quantity": row["quantity"],
+            "start_date": row["start_date"],
+            "end_date": row["end_date"],
+            "active": row["active"] in ["True", "true", "1"],
+            "product_id": row["product_id"],
+            "dev_created_at": row["dev_created_at"]
         }
         context.resp = requests.post(rest_endpoint, json=payload)
         assert context.resp.status_code == HTTP_201_CREATED
