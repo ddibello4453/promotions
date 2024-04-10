@@ -1,4 +1,9 @@
 # These can be overidden with env vars.
+REGISTRY ?= cluster-registry:32000
+NAMESPACE ?= nyu-devops
+IMAGE_NAME ?= promotions
+IMAGE_TAG ?= 1.0
+IMAGE ?= $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
 CLUSTER ?= nyu-devops
 
 .SILENT:
@@ -58,7 +63,29 @@ cluster-rm: ## Remove a K3D Kubernetes cluster
 	$(info Removing Kubernetes cluster...)
 	k3d cluster delete
 
+.PHONY: push
+image-push: ## Push to a Docker image registry
+	$(info Logging into IBM Cloud cluster $(CLUSTER)...)
+	docker push $(IMAGE)
+
 .PHONY: deploy
 depoy: ## Deploy the service on local Kubernetes
 	$(info Deploying service locally...)
+	kubectl apply -f k8s/
+
+############################################################
+# COMMANDS FOR BUILDING THE IMAGE
+############################################################
+
+##@ Image Build
+
+.PHONY: kube-local
+kube-local:	## Deploy kubernetes to local
+	$(info Building $(IMAGE) for $(PLATFORM)...)
+	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
+	kubectl config set-context --current --namespace $(NAMESPACE)
+	docker tag $(IMAGE_NAME):$(IMAGE_TAG) $(IMAGE)
+	docker push $(IMAGE)
+	kubectl create namespace $(NAMESPACE)
+	kubectl config set-context --current --namespace $(NAMESPACE)
 	kubectl apply -f k8s/
