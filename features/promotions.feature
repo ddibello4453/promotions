@@ -13,3 +13,38 @@ Feature: The promotion store service back-end
         When I visit the "Home Page"
         Then I should see "promotion Demo RESTful Service" in the title
         And I should not see "404 Not Found"
+
+    Scenario: Create a Promotion
+    When I visit the "Home Page"
+    And I set the "Promo Code" to "SUMMERSALE"
+    And I select "PERCENT" in the "Type" dropdown
+    And I set the "Value" to "25"
+    And I set the "Quantity" to "100"
+    And I set the "Start Date" to "05/01/2024"
+    And I set the "End Date" to "05/03/2024"
+    And I select "True" in the "Active" dropdown
+    And I set the "Product ID" to "9588"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Promo ID" field
+    And I press the "Clear" button
+    Then the "Promo ID" field should be empty
+    And the "Promo Code" field should be empty
+    And the "Type" field should be empty
+    And the "Value" field should be empty
+    And the "Quantity" field should be empty
+    And the "Start Date" field should be empty
+    And the "End Date" field should be empty
+    And the "Active" field should be empty
+    And the "Product ID" field should be empty
+    When I paste the "Promo ID" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "SUMMERSALE" in the "Promo Code" field
+    And I should see "Percent" in the "Type" dropdown
+    And I should see "25" in the "Value" field
+    And I should see "100" in the "Quantity" field
+    And I should see "05/01/2024" in the "Start Date" field
+    And I should see "05/03/2024" in the "End Date" field
+    And I should see "True" in the "Active" dropdown
+    And I should see "9588" in the "Product ID" field

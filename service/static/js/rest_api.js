@@ -6,25 +6,33 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#promotion_id").val(res.id);
-        $("#promotion_name").val(res.name);
-        $("#promotion_category").val(res.category);
-        if (res.available == true) {
-            $("#promotion_available").val("true");
+        $("#promo_id").val(res.promo_id);
+        $("#cust_promo_code").val(res.cust_promo_code);
+        $("#type").val(res.type);
+        $("#value").val(res.value);
+        $("#quantity").val(res.quantity);
+        $("#start_date").val(res.start_date);
+        $("#end_date").val(res.end_date);
+        if (res.active == true) {
+            $("#active").val("true");
         } else {
-            $("#promotion_available").val("false");
+            $("#active").val("false");
         }
-        $("#promotion_gender").val(res.gender);
-        $("#promotion_birthday").val(res.birthday);
+        $("#product_id").val(res.product_id);
+        $("#dev_created_at").val(res.dev_created_at);
     }
 
     /// Clears all form fields
     function clear_form_data() {
-        $("#promotion_name").val("");
-        $("#promotion_category").val("");
-        $("#promotion_available").val("");
-        $("#promotion_gender").val("");
-        $("#promotion_birthday").val("");
+        $("#promo_id").val("");
+        $("#promo_code").val("");
+        $("#type").val("");
+        $("#value").val("");
+        $("#quantity").val("");
+        $("#start_date").val("");
+        $("#end_date").val("");
+        $("#active").val("");
+        $("#product_id").val("");
     }
 
     // Updates the flash message area
@@ -39,18 +47,26 @@ $(function () {
 
     $("#create-btn").click(function () {
 
-        let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
-        let gender = $("#promotion_gender").val();
-        let birthday = $("#promotion_birthday").val();
+        let cust_promo_code = $("#cust_promo_code").val();
+        let type = $("#type").val();
+        let value = $("#value").val();
+        let quantity = $("#quantity").val();
+        let start_date = $("#start_date").val();
+        let end_date = $("#end_date").val();
+        let active = $("#active").val() == "true";
+        let product_id = $("#product_id").val();
+        let dev_created_at = new Date().toISOString().split('T')[0];
 
         let data = {
-            "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "cust_promo_code": cust_promo_code,
+            "type": type,
+            "value": value,
+            "quantity": quantity,
+            "start_date": start_date,
+            "end_date": end_date,
+            "active": active,
+            "product_id": product_id,
+            "dev_created_at": dev_created_at
         };
 
         $("#flash_message").empty();
@@ -80,18 +96,24 @@ $(function () {
     $("#update-btn").click(function () {
 
         let promotion_id = $("#promotion_id").val();
-        let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
-        let gender = $("#promotion_gender").val();
-        let birthday = $("#promotion_birthday").val();
+        let cust_promo_code = $("#cust_promo_code").val("");
+        let type = $("#type").val();
+        let value = $("#value").val();
+        let quantity = $("#quantity").val();
+        let start_date = $("#start_date").val();
+        let end_date = $("#end_date").val();
+        let active = $("#active").val() == "true";
+        let product_id = $("#product_id").val();
 
         let data = {
-            "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "cust_promo_code": cust_promo_code,
+            "type": type,
+            "value": value,
+            "quantity": quantity,
+            "start_date": start_date,
+            "end_date": end_date,
+            "active": active,
+            "product_id": product_id,
         };
 
         $("#flash_message").empty();
@@ -120,13 +142,13 @@ $(function () {
 
     $("#retrieve-btn").click(function () {
 
-        let promotion_id = $("#promotion_id").val();
+        let promo_id = $("#promo_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/promotions/${promotion_id}`,
+            url: `/promotions/${promo_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -150,20 +172,20 @@ $(function () {
 
     $("#delete-btn").click(function () {
 
-        let promotion_id = $("#promotion_id").val();
+        let promo_id = $("#promo_id").val();
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/promotions/${promotion_id}`,
+            url: `/promotions/${promo_id}`,
             contentType: "application/json",
             data: '',
         })
 
         ajax.done(function (res) {
             clear_form_data()
-            flash_message("promotion has been Deleted!")
+            flash_message("Promotion has been Deleted!")
         });
 
         ajax.fail(function (res) {
@@ -176,7 +198,7 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        $("#promotion_id").val("");
+        $("#promo_id").val("");
         $("#flash_message").empty();
         clear_form_data()
     });
@@ -187,27 +209,27 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        let name = $("#promotion_name").val();
-        let category = $("#promotion_category").val();
-        let available = $("#promotion_available").val() == "true";
+        let cust_promo_code = $("#cust_promo_code").val("");
+        let type = $("#type").val();
+        let active = $("#active").val() == "true";
 
         let queryString = ""
 
-        if (name) {
-            queryString += 'name=' + name
+        if (cust_promo_code) {
+            queryString += 'cust_promo_code=' + cust_promo_code
         }
-        if (category) {
+        if (type) {
             if (queryString.length > 0) {
-                queryString += '&category=' + category
+                queryString += '&type=' + type
             } else {
-                queryString += 'category=' + category
+                queryString += 'type=' + type
             }
         }
-        if (available) {
+        if (active) {
             if (queryString.length > 0) {
-                queryString += '&available=' + available
+                queryString += '&active=' + active
             } else {
-                queryString += 'available=' + available
+                queryString += 'active=' + active
             }
         }
 
@@ -225,27 +247,31 @@ $(function () {
             $("#search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
-            table += '<th class="col-md-2">ID</th>'
-            table += '<th class="col-md-2">Name</th>'
-            table += '<th class="col-md-2">Category</th>'
-            table += '<th class="col-md-2">Available</th>'
-            table += '<th class="col-md-2">Gender</th>'
-            table += '<th class="col-md-2">Birthday</th>'
+            table += '<th class="col-md-2">Promo ID</th>'
+            table += '<th class="col-md-2">Promo Code</th>'
+            table += '<th class="col-md-2">Type</th>'
+            table += '<th class="col-md-2">Value</th>'
+            table += '<th class="col-md-2">Quantity</th>'
+            table += '<th class="col-md-2">Start Date</th>'
+            table += '<th class="col-md-2">End Date</th>'
+            table += '<th class="col-md-2">Active</th>'
+            table += '<th class="col-md-2">Product ID</th>'
+            table += '<th class="col-md-2">Created At</th>'
             table += '</tr></thead><tbody>'
-            let firstpromotion = "";
+            let firstPromotion = "";
             for (let i = 0; i < res.length; i++) {
-                let promotion = res[i];
-                table += `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.category}</td><td>${promotion.available}</td><td>${promotion.gender}</td><td>${promotion.birthday}</td></tr>`;
+                let promotions = res[i];
+                table += `<tr id="row_${i}"><td>${promotions.promo_id}</td><td>${promotions.cust_promo_code}</td><td>${promotions.type}</td><td>${promotions.value}</td><td>${promotions.quantity}</td><td>${promotions.start_date}</td><td>${promotions.end_date}</td><td>${promotions.active}</td><td>${promotions.product_id}</td><td>${promotions.dev_created_at}</td></tr>`;
                 if (i == 0) {
-                    firstpromotion = promotion;
+                    firstPromotion = promotions;
                 }
             }
             table += '</tbody></table>';
             $("#search_results").append(table);
 
             // copy the first result to the form
-            if (firstpromotion != "") {
-                update_form_data(firstpromotion)
+            if (firstPromotion != "") {
+                update_form_data(firstPromotion)
             }
 
             flash_message("Success")
