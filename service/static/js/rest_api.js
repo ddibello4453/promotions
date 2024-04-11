@@ -18,8 +18,8 @@ $(function () {
         } else {
             $("promo_#active").val("false");
         }
-        $("#product_id").val(res.product_id);
-        $("#dev_created_at").val(res.dev_created_at);
+        $("#promo_product_id").val(res.product_id);
+        $("#promo_dev_created_at").val(res.dev_created_at);
     }
 
     /// Clears all form fields
@@ -248,7 +248,7 @@ $(function () {
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
             table += '<th class="col-md-2">Promo ID</th>'
-            table += '<th class="col-md-2">Promo Code</th>'
+            table += '<th class="col-md-2">Cust Promo Code</th>'
             table += '<th class="col-md-2">Type</th>'
             table += '<th class="col-md-2">Value</th>'
             table += '<th class="col-md-2">Quantity</th>'
@@ -256,7 +256,7 @@ $(function () {
             table += '<th class="col-md-2">End Date</th>'
             table += '<th class="col-md-2">Active</th>'
             table += '<th class="col-md-2">Product ID</th>'
-            table += '<th class="col-md-2">Created At</th>'
+            table += '<th class="col-md-2">Dev Created At</th>'
             table += '</tr></thead><tbody>'
             let firstPromotion = "";
             for (let i = 0; i < res.length; i++) {
