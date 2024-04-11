@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>promotion Demo RESTful Service</title>
+    <title>Promotion Demo RESTful Service</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,7 @@
   <body>
     <div class="container">
       <div class="page-header">
-          <h1>promotion Demo REST API Service</h1>
+          <h1>Promotion Demo REST API Service</h1>
       </div>
 
       <!-- Flash Message -->
@@ -27,9 +27,9 @@
         <div class="well">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_id">promotion ID:</label>
+              <label class="control-label col-sm-2" for="promo_id">Promo ID:</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" id="promotion_id" placeholder="Enter ID of promotion">
+                <input type="text" class="form-control" id="promo_id" placeholder="Enter ID of promotion">
               </div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
@@ -40,53 +40,77 @@
 
           <div class="form-horizontal">
 
-            <!-- NAME -->
+            <!-- PROMO CODE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_name">Name:</label>
+              <label class="control-label col-sm-2" for="cust_promo_code">Promo Code:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="promotion_name" placeholder="Enter name for promotion">
+                <input type="text" class="form-control" id="cust_promo_code" placeholder="Enter code for promotion">
               </div>
             </div>
 
-            <!-- CATEGORY -->
+            <!-- TYPE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_category">Category:</label>
+              <label class="control-label col-sm-2" for="type">Type:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="promotion_category" placeholder="Enter category for promotion">
+                <select class="form-control" id="type">
+                  <option value="PERCENT" selected>Percent</option>
+                  <option value="SAVING">Saving</option>
+                  <option value="BOGO">Buy 1 Get 1</option>
+                </select>
               </div>
             </div>
 
-            <!-- AVAILABLE -->
+            <!-- VALUE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_available">Available:</label>
+              <label class="control-label col-sm-2" for="value">Value:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="promotion_available">
+                <input type="text" class="form-control" id="value" placeholder="Enter value for promotion">
+              </div>
+            </div>
+
+            <!-- QUANTITY -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="quantity">Quantity:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="quantity" placeholder="Enter quantity for promotion">
+              </div>
+            </div>
+
+            <!-- START DATE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="start_date">Start Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="start_date" placeholder="2020-04-01">
+              </div>
+            </div>
+
+            <!-- END DATE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="end_date">End Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="end_date" placeholder="2020-04-01">
+              </div>
+            </div>
+
+            <!-- ACTIVE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="active">Active:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="active">
                   <option value="true" selected>True</option>
                   <option value="false">False</option>
                 </select>
               </div>
             </div>
 
-            <!-- GENDER -->
+            <!-- PRODUCT ID -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_gender">Gender:</label>
+              <label class="control-label col-sm-2" for="product_id">Product ID:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="promotion_gender">
-                  <option value="UNKNOWN" selected>Unknown</option>
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                </select>
+                <input type="text" class="form-control" id="product_id" placeholder="Enter Product ID for promotion">
               </div>
             </div>
-
-            <!-- BIRTHDAY -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="promotion_birthday">Birthday:</label>
-              <div class="col-sm-10">
-                <input type="date" class="form-control" id="promotion_birthday" placeholder="2020-04-01">
-              </div>
-            </div>
-
+            
 
             <!-- SUBMIT BUTTONS -->
             <div class="form-group">
@@ -106,12 +130,16 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th class="col-md-1">ID</th>
-            <th class="col-md-4">Name</th>
-            <th class="col-md-4">Category</th>
-            <th class="col-md-3">Available</th>
-            <th class="col-md-3">Gender</th>
-            <th class="col-md-3">Birthday</th>
+            <th class="col-md-1">Promo ID</th>
+            <th class="col-md-4">Promo Code</th>
+            <th class="col-md-4">Type</th>
+            <th class="col-md-3">Value</th>
+            <th class="col-md-3">Quantity</th>
+            <th class="col-md-3">Start Date</th>
+            <th class="col-md-3">End Date</th>
+            <th class="col-md-3">Active</th>
+            <th class="col-md-3">Product ID</th>
+            <th class="col-md-3">Created At</th>
           </tr>
           </thead>
         </table>
