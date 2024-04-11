@@ -27,9 +27,9 @@
         <div class="well">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="control-label col-sm-2" for="promo_id">Promo ID:</label>
+              <label class="control-label col-sm-2" for="promo_promo_id">Promo ID:</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" id="promo_id" placeholder="Enter ID of promotion">
+                <input type="text" class="form-control" id="promo_promo_id" placeholder="Enter ID of promotion">
               </div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
@@ -40,19 +40,19 @@
 
           <div class="form-horizontal">
 
-            <!-- PROMO CODE -->
+            <!-- CUST PROMO CODE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="cust_promo_code">Promo Code:</label>
+              <label class="control-label col-sm-2" for="promo_cust_promo_code">Cust Promo Code:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="cust_promo_code" placeholder="Enter code for promotion">
+                <input type="text" class="form-control" id="promo_cust_promo_code" placeholder="Enter code for promotion">
               </div>
             </div>
 
             <!-- TYPE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="type">Type:</label>
+              <label class="control-label col-sm-2" for="promo_type">Type:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="type">
+                <select class="form-control" id="promo_type">
                   <option value="PERCENT" selected>Percent</option>
                   <option value="SAVING">Saving</option>
                   <option value="BOGO">Buy 1 Get 1</option>
@@ -62,41 +62,41 @@
 
             <!-- VALUE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="value">Value:</label>
+              <label class="control-label col-sm-2" for="promo_value">Value:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="value" placeholder="Enter value for promotion">
+                <input type="text" class="form-control" id="promo_value" placeholder="Enter value for promotion">
               </div>
             </div>
 
             <!-- QUANTITY -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="quantity">Quantity:</label>
+              <label class="control-label col-sm-2" for="promo_quantity">Quantity:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="quantity" placeholder="Enter quantity for promotion">
+                <input type="text" class="form-control" id="promo_quantity" placeholder="Enter quantity for promotion">
               </div>
             </div>
 
             <!-- START DATE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="start_date">Start Date:</label>
+              <label class="control-label col-sm-2" for="promo_start_date">Start Date:</label>
               <div class="col-sm-10">
-                <input type="date" class="form-control" id="start_date" placeholder="2020-04-01">
+                <input type="date" class="form-control" id="promo_start_date" placeholder="2020-04-01">
               </div>
             </div>
 
             <!-- END DATE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="end_date">End Date:</label>
+              <label class="control-label col-sm-2" for="promo_end_date">End Date:</label>
               <div class="col-sm-10">
-                <input type="date" class="form-control" id="end_date" placeholder="2020-04-01">
+                <input type="date" class="form-control" id="promo_end_date" placeholder="2020-04-01">
               </div>
             </div>
 
             <!-- ACTIVE -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="active">Active:</label>
+              <label class="control-label col-sm-2" for="promo_active">Active:</label>
               <div class="col-sm-10">
-                <select class="form-control" id="active">
+                <select class="form-control" id="promo_active">
                   <option value="true" selected>True</option>
                   <option value="false">False</option>
                 </select>
@@ -105,12 +105,11 @@
 
             <!-- PRODUCT ID -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="product_id">Product ID:</label>
+              <label class="control-label col-sm-2" for="promo_product_id">Product ID:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="product_id" placeholder="Enter Product ID for promotion">
+                <input type="text" class="form-control" id="promo_product_id" placeholder="Enter Product ID for promotion">
               </div>
             </div>
-            
 
             <!-- SUBMIT BUTTONS -->
             <div class="form-group">
@@ -131,7 +130,7 @@
           <thead>
           <tr>
             <th class="col-md-1">Promo ID</th>
-            <th class="col-md-4">Promo Code</th>
+            <th class="col-md-4">Cust Promo Code</th>
             <th class="col-md-4">Type</th>
             <th class="col-md-3">Value</th>
             <th class="col-md-3">Quantity</th>
@@ -139,7 +138,7 @@
             <th class="col-md-3">End Date</th>
             <th class="col-md-3">Active</th>
             <th class="col-md-3">Product ID</th>
-            <th class="col-md-3">Created At</th>
+            <th class="col-md-3">Dev Created At</th>
           </tr>
           </thead>
         </table>

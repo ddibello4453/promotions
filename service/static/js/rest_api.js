@@ -6,33 +6,33 @@ $(function () {
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#promo_id").val(res.promo_id);
-        $("#cust_promo_code").val(res.cust_promo_code);
-        $("#type").val(res.type);
-        $("#value").val(res.value);
-        $("#quantity").val(res.quantity);
-        $("#start_date").val(res.start_date);
-        $("#end_date").val(res.end_date);
+        $("#promo_promo_id").val(res.promo_id);
+        $("#promo_cust_promo_code").val(res.cust_promo_code);
+        $("#promo_type").val(res.type);
+        $("#promo_value").val(res.value);
+        $("#promo_quantity").val(res.quantity);
+        $("#promo_start_date").val(res.start_date);
+        $("#promo_end_date").val(res.end_date);
         if (res.active == true) {
-            $("#active").val("true");
+            $("#promo_active").val("true");
         } else {
-            $("#active").val("false");
+            $("promo_#active").val("false");
         }
-        $("#product_id").val(res.product_id);
-        $("#dev_created_at").val(res.dev_created_at);
+        $("#promo_product_id").val(res.product_id);
+        $("#promo_dev_created_at").val(res.dev_created_at);
     }
 
     /// Clears all form fields
     function clear_form_data() {
-        $("#promo_id").val("");
-        $("#promo_code").val("");
-        $("#type").val("");
-        $("#value").val("");
-        $("#quantity").val("");
-        $("#start_date").val("");
-        $("#end_date").val("");
-        $("#active").val("");
-        $("#product_id").val("");
+        $("#promo_promo_id").val("");
+        $("#promo_cust_promo_code").val("");
+        $("#promo_type").val("");
+        $("#promo_value").val("");
+        $("#promo_quantity").val("");
+        $("#promo_start_date").val("");
+        $("#promo_end_date").val("");
+        $("#promo_active").val("");
+        $("#promo_product_id").val("");
     }
 
     // Updates the flash message area
@@ -47,14 +47,14 @@ $(function () {
 
     $("#create-btn").click(function () {
 
-        let cust_promo_code = $("#cust_promo_code").val();
-        let type = $("#type").val();
-        let value = $("#value").val();
-        let quantity = $("#quantity").val();
-        let start_date = $("#start_date").val();
-        let end_date = $("#end_date").val();
-        let active = $("#active").val() == "true";
-        let product_id = $("#product_id").val();
+        let cust_promo_code = $("#promo_cust_promo_code").val();
+        let type = $("#promo_type").val();
+        let value = $("#promo_value").val();
+        let quantity = $("#promo_quantity").val();
+        let start_date = $("#promo_start_date").val();
+        let end_date = $("#promo_end_date").val();
+        let active = $("#promo_active").val() == "true";
+        let product_id = $("#promo_product_id").val();
         let dev_created_at = new Date().toISOString().split('T')[0];
 
         let data = {
@@ -95,15 +95,15 @@ $(function () {
 
     $("#update-btn").click(function () {
 
-        let promotion_id = $("#promotion_id").val();
-        let cust_promo_code = $("#cust_promo_code").val("");
-        let type = $("#type").val();
-        let value = $("#value").val();
-        let quantity = $("#quantity").val();
-        let start_date = $("#start_date").val();
-        let end_date = $("#end_date").val();
-        let active = $("#active").val() == "true";
-        let product_id = $("#product_id").val();
+        let promo_id = $("#promo_promo_id").val();
+        let cust_promo_code = $("#promo_cust_promo_code").val();
+        let type = $("#promo_type").val();
+        let value = $("#promo_value").val();
+        let quantity = $("#promo_quantity").val();
+        let start_date = $("#promo_start_date").val();
+        let end_date = $("#promo_end_date").val();
+        let active = $("#promo_active").val() == "true";
+        let product_id = $("#promo_product_id").val();
 
         let data = {
             "cust_promo_code": cust_promo_code,
@@ -120,7 +120,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/promotions/${promotion_id}`,
+            url: `/promotions/${promo_id}`,
             contentType: "application/json",
             data: JSON.stringify(data)
         })
@@ -142,7 +142,7 @@ $(function () {
 
     $("#retrieve-btn").click(function () {
 
-        let promo_id = $("#promo_id").val();
+        let promo_id = $("#promo_promo_id").val();
 
         $("#flash_message").empty();
 
@@ -172,7 +172,7 @@ $(function () {
 
     $("#delete-btn").click(function () {
 
-        let promo_id = $("#promo_id").val();
+        let promo_id = $("#promo_promo_id").val();
 
         $("#flash_message").empty();
 
@@ -198,7 +198,7 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        $("#promo_id").val("");
+        $("#promo_promo_id").val("");
         $("#flash_message").empty();
         clear_form_data()
     });
@@ -209,9 +209,9 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        let cust_promo_code = $("#cust_promo_code").val("");
-        let type = $("#type").val();
-        let active = $("#active").val() == "true";
+        let cust_promo_code = $("#promo_cust_promo_code").val("");
+        let type = $("#promo_type").val();
+        let active = $("#promo_active").val() == "true";
 
         let queryString = ""
 
@@ -248,7 +248,7 @@ $(function () {
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
             table += '<th class="col-md-2">Promo ID</th>'
-            table += '<th class="col-md-2">Promo Code</th>'
+            table += '<th class="col-md-2">Cust Promo Code</th>'
             table += '<th class="col-md-2">Type</th>'
             table += '<th class="col-md-2">Value</th>'
             table += '<th class="col-md-2">Quantity</th>'
@@ -256,7 +256,7 @@ $(function () {
             table += '<th class="col-md-2">End Date</th>'
             table += '<th class="col-md-2">Active</th>'
             table += '<th class="col-md-2">Product ID</th>'
-            table += '<th class="col-md-2">Created At</th>'
+            table += '<th class="col-md-2">Dev Created At</th>'
             table += '</tr></thead><tbody>'
             let firstPromotion = "";
             for (let i = 0; i < res.length; i++) {
