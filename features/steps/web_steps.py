@@ -29,6 +29,7 @@ from behave import when, then
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from datetime import datetime, timedelta
 
 ID_PREFIX = "promo_"
 
@@ -165,11 +166,13 @@ def step_impl(context, text_string, element_name):
     assert found
 
 
-@when('I change "{element_name}" to "{text_string}"')
-def step_impl(context, element_name, text_string):
+@then('I should see the previous day\'s date in the "{element_name}" field')
+def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(" ", "_")
-    element = WebDriverWait(context.driver, context.wait_seconds).until(
-        expected_conditions.presence_of_element_located((By.ID, element_id))
+    expected_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element_value(
+            (By.ID, element_id), expected_date
+        )
     )
-    element.clear()
-    element.send_keys(text_string)
+    assert found

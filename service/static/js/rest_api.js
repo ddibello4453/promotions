@@ -16,7 +16,7 @@ $(function () {
         if (res.active == true) {
             $("#promo_active").val("true");
         } else {
-            $("promo_#active").val("false");
+            $("#promo_active").val("false");
         }
         $("#promo_product_id").val(res.product_id);
         $("#promo_dev_created_at").val(res.dev_created_at);
@@ -191,6 +191,53 @@ $(function () {
         ajax.fail(function (res) {
             flash_message("Server error!")
         });
+    });
+
+    // ****************************************
+    // Cancel a promotion
+    // ****************************************
+
+    $("#cancel-btn").click(function () {
+
+        let promo_id = $("#promo_promo_id").val();
+        let cust_promo_code = $("#promo_cust_promo_code").val();
+        let type = $("#promo_type").val();
+        let value = $("#promo_value").val();
+        let quantity = $("#promo_quantity").val();
+        let start_date = $("#promo_start_date").val();
+        let end_date = $("#promo_end_date").val();
+        let active = $("#promo_active").val() == false;
+        let product_id = $("#promo_product_id").val();
+
+        let data = {
+            "cust_promo_code": cust_promo_code,
+            "type": type,
+            "value": value,
+            "quantity": quantity,
+            "start_date": start_date,
+            "end_date": end_date,
+            "active": active,
+            "product_id": product_id,
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/promotions/cancel/${promo_id}`,
+            contentType: "application/json",
+            data: JSON.stringify(data)
+        })
+
+        ajax.done(function (res) {
+            update_form_data(res)
+            flash_message("Promotion has been Canceled!")
+        });
+
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message)
+        });
+
     });
 
     // ****************************************
