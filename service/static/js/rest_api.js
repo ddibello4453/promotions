@@ -104,6 +104,7 @@ $(function () {
         let end_date = $("#promo_end_date").val();
         let active = $("#promo_active").val() == "true";
         let product_id = $("#promo_product_id").val();
+        let dev_created_at = new Date().toISOString().split('T')[0];
 
         let data = {
             "cust_promo_code": cust_promo_code,
@@ -114,6 +115,7 @@ $(function () {
             "end_date": end_date,
             "active": active,
             "product_id": product_id,
+            "dev_created_at": dev_created_at
         };
 
         $("#flash_message").empty();
@@ -127,7 +129,7 @@ $(function () {
 
         ajax.done(function (res) {
             update_form_data(res)
-            flash_message("Success")
+            flash_message("Promotion has been Updated!")
         });
 
         ajax.fail(function (res) {
