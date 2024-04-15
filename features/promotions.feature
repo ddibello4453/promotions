@@ -117,5 +117,30 @@ Feature: The promotion store service back-end
     And I paste the "Promo ID" field
     And I press the "Delete" button
     Then I should see the message "Promotion has been Deleted!"
+
+
+    Scenario: Query a Promotion
+    When I visit the "Home Page"
+    And I set the "Cust Promo Code" to "WINTERSALE"
+    And I select "Buy 1 Get 1" in the "Type" dropdown
+    And I set the "Value" to "0"
+    And I set the "Quantity" to "100"
+    And I set the "Start Date" to "12-01-2024"
+    And I set the "End Date" to "12-31-2025"
+    And I select "True" in the "Active" dropdown
+    And I set the "Product ID" to "9588"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Promo ID" field
+    And I press the "Clear" button
+    And I paste the "Promo ID" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "WINTERSALE" in the "Cust Promo Code" field
+    And I should see "Buy 1 Get 1" in the "Type" dropdown
+    And I should see "0" in the "Value" field
+    And I should see "100" in the "Quantity" field
+    And I should see "True" in the "Active" dropdown
+    And I should see "9588" in the "Product ID" field
  
 
