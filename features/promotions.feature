@@ -117,5 +117,16 @@ Feature: The promotion store service back-end
     And I paste the "Promo ID" field
     And I press the "Delete" button
     Then I should see the message "Promotion has been Deleted!"
- 
 
+
+    Scenario: Query a Promotion by Type
+    When I visit the "Home Page"
+    And I select "Saving" in the "Type" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "JULY4" in the "Cust Promo Code" field
+    And I should see "Saving" in the "Type" dropdown
+    And I should see "50" in the "Value" field
+    And I should see "10" in the "Quantity" field
+    And I should see "True" in the "Active" dropdown
+    And I should see "33422" in the "Product ID" field
